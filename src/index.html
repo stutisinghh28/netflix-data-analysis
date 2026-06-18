@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Data Analysis - Streaming Trends & Patterns</title>
+    <meta name="description" content="An interactive data analysis dashboard exploring the Netflix Movies and TV Shows dataset from Kaggle. Built with Python, Pandas, Matplotlib, and Seaborn.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome icons via cdn (optional but can use SVG fallback/Unicode, let's write custom clean SVGs for visual excellence) -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-area">
+                <span class="brand-text">NETFLIX</span>
+                <span class="sub-brand">DATA LAB</span>
+            </div>
+            <nav class="main-nav">
+                <button class="nav-btn active" data-tab="overview">Overview</button>
+                <button class="nav-btn" data-tab="gallery">Visualizations</button>
+                <button class="nav-btn" data-tab="explorer">Data Explorer</button>
+                <button class="nav-btn" data-tab="insights">Key Insights</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="dashboard-container">
+        
+        <!-- Tab 1: Overview -->
+        <section id="overview" class="tab-content active">
+            <div class="hero-section">
+                <h1>Netflix Streaming Trends & Content Analysis</h1>
+                <p>An in-depth exploratory data analysis (EDA) of Netflix's catalog to uncover content distribution patterns, global production hubs, and evolving release strategies over the years.</p>
+                <div class="meta-pills">
+                    <span class="pill">Python</span>
+                    <span class="pill">Pandas</span>
+                    <span class="pill">Matplotlib</span>
+                    <span class="pill">Seaborn</span>
+                </div>
+            </div>
+
+            <!-- KPI Cards Grid -->
+            <div class="kpi-grid">
+                <div class="kpi-card" id="kpi-total-titles">
+                    <div class="kpi-info">
+                        <h3>Total Catalog Titles</h3>
+                        <div class="kpi-value">8,807</div>
+                        <p class="kpi-subtext">Movies & TV Shows</p>
+                    </div>
+                    <div class="kpi-icon">🎬</div>
+                </div>
+                <div class="kpi-card" id="kpi-movies-ratio">
+                    <div class="kpi-info">
+                        <h3>Movies Distribution</h3>
+                        <div class="kpi-value">69.6%</div>
+                        <p class="kpi-subtext"><span id="movies-count">6,131</span> titles</p>
+                    </div>
+                    <div class="kpi-icon">🎥</div>
+                </div>
+                <div class="kpi-card" id="kpi-tv-ratio">
+                    <div class="kpi-info">
+                        <h3>TV Shows Distribution</h3>
+                        <div class="kpi-value">30.4%</div>
+                        <p class="kpi-subtext"><span id="tv-count">2,676</span> titles</p>
+                    </div>
+                    <div class="kpi-icon">📺</div>
+                </div>
+                <div class="kpi-card" id="kpi-top-country">
+                    <div class="kpi-info">
+                        <h3>Top Producer Country</h3>
+                        <div class="kpi-value" id="top-country-name">United States</div>
+                        <p class="kpi-subtext" id="top-country-count">3,689 titles co-produced</p>
+                    </div>
+                    <div class="kpi-icon">🌍</div>
+                </div>
+            </div>
+
+            <!-- Featured Visualizations Grid -->
+            <div class="visuals-intro-grid">
+                <div class="visual-intro-card">
+                    <div class="card-header">
+                        <h2>Catalog Composition</h2>
+                        <span class="tag">Seaborn / Matplotlib</span>
+                    </div>
+                    <div class="chart-img-container">
+                        <img src="../output/visualizations/content_distribution.png" alt="Content Distribution - Movies vs TV Shows" class="chart-image">
+                    </div>
+                    <div class="card-desc">
+                        <p>Movies dominate the Netflix platform, representing nearly 70% of the total titles, while TV shows account for the remaining 30%. TV shows typically feature multiple seasons, demanding longer viewer engagement.</p>
+                    </div>
+                </div>
+                
+                <div class="visual-intro-card">
+                    <div class="card-header">
+                        <h2>Growth Over Time</h2>
+                        <span class="tag">Matplotlib Area</span>
+                    </div>
+                    <div class="chart-img-container">
+                        <img src="../output/visualizations/content_added_per_year.png" alt="Content Added Per Year" class="chart-image">
+                    </div>
+                    <div class="card-desc">
+                        <p>Netflix experienced exponential catalog growth after 2015, peaking around 2019. The release rate shows a focus on relatively modern, fresh content with consistent additions annually.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 2: Visualizations Gallery -->
+        <section id="gallery" class="tab-content">
+            <div class="section-title-area">
+                <h2>Exploratory Data Analysis Gallery</h2>
+                <p>Click on any chart tab below to inspect specific metrics, distribution patterns, and production statistics.</p>
+            </div>
+            
+            <div class="gallery-layout">
+                <div class="gallery-sidebar">
+                    <button class="gallery-tab-btn active" data-chart="added">📈 Content Added Per Year</button>
+                    <button class="gallery-tab-btn" data-chart="countries">🌍 Top Producing Countries</button>
+                    <button class="gallery-tab-btn" data-chart="genres">🎭 Top Genre Distribution</button>
+                    <button class="gallery-tab-btn" data-chart="ratings">🔞 Rating Classifications</button>
+                    <button class="gallery-tab-btn" data-chart="seasons">⏳ TV Show Duration</button>
+                    <button class="gallery-tab-btn" data-chart="ratio">🍰 Movie/TV Show Ratio</button>
+                </div>
+                
+                <div class="gallery-display-area">
+                    <div class="chart-display-card active" id="chart-added">
+                        <h3>Content Additions Over Time</h3>
+                        <div class="chart-box">
+                            <img src="../output/visualizations/content_added_per_year.png" alt="Content Added Per Year">
+                        </div>
+                        <div class="chart-analysis">
+                            <h4>Insight Analysis</h4>
+                            <ul>
+                                <li><strong>Pre-2015:</strong> Steady but slow accumulation of titles.</li>
+                                <li><strong>Post-2015:</strong> Massive growth in both formats as Netflix transitioned from a content hub to a primary producer.</li>
+                                <li><strong>Recent Strategy:</strong> Gradual plateauing in 2020/2021 as focus shifted towards quality, original licensing, and international diversity rather than sheer catalog volume.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="chart-display-card" id="chart-countries">
+                        <h3>Global Production Hubs</h3>
+                        <div class="chart-box">
+                            <img src="../output/visualizations/top_countries.png" alt="Top Producing Countries">
+                        </div>
+                        <div class="chart-analysis">
+                            <h4>Insight Analysis</h4>
+                            <ul>
+                                <li><strong>United States:</strong> Undisputed leader in content production, representing the bulk of both Netflix Originals and licensed content.</li>
+                                <li><strong>India:</strong> The second-largest contributor, driven by a highly dominant movie library (Bollywood catalog).</li>
+                                <li><strong>International Expansion:</strong> United Kingdom, Japan, South Korea, and Canada hold solid shares, highlighting Netflix's heavy investment in international markets (e.g., Anime from Japan, K-Dramas from South Korea).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="chart-display-card" id="chart-genres">
+                        <h3>Catalog Genre Distribution</h3>
+                        <div class="chart-box">
+                            <img src="../output/visualizations/top_genres.png" alt="Top Genre Distribution">
+                        </div>
+                        <div class="chart-analysis">
+                            <h4>Insight Analysis</h4>
+                            <ul>
+                                <li><strong>Dramas & International Movies:</strong> These rank as the most prevalent genres, indicating a strong preference for narratives with international appeal.</li>
+                                <li><strong>Comedies & Documentaries:</strong> Highly popular categories that draw massive, broad audiences.</li>
+                                <li><strong>Niche Content:</strong> Action, Thrillers, and Romance remain highly competitive, showing that Netflix maintains a highly balanced portfolio to satisfy varied demographic groups.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="chart-display-card" id="chart-ratings">
+                        <h3>Target Audience Rating Distribution</h3>
+                        <div class="chart-box">
+                            <img src="../output/visualizations/rating_classifications.png" alt="Rating Classifications">
+                        </div>
+                        <div class="chart-analysis">
+                            <h4>Insight Analysis</h4>
+                            <ul>
+                                <li><strong>TV-MA (Mature Audience):</strong> The single largest rating category. Shows Netflix has a strong focus on mature viewers with complex themes, dramas, and gritty content.</li>
+                                <li><strong>TV-14 (Parents Strongly Cautioned):</strong> The second-largest classification, capturing standard teens and family viewing groups.</li>
+                                <li><strong>PG-13 / R / TV-PG:</strong> Medium-level distribution, showing a wide range of content styles from movies to serials.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="chart-display-card" id="chart-seasons">
+                        <h3>TV Show Durations (Seasons)</h3>
+                        <div class="chart-box">
+                            <img src="../output/visualizations/tv_shows_seasons.png" alt="TV Show Durations">
+                        </div>
+                        <div class="chart-analysis">
+                            <h4>Insight Analysis</h4>
+                            <ul>
+                                <li><strong>1 Season Domination:</strong> The vast majority of TV Shows on Netflix only run for 1 Season. This is due to many single-season limit/mini-series releases, as well as rapid cancellations of shows that underperform.</li>
+                                <li><strong>Multi-season Retention:</strong> Retaining shows past 3 Seasons is relatively rare, indicating that Netflix prioritizes launching new intellectual property over sustaining long-running, expensive series unless they achieve massive global popularity (e.g., Stranger Things).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="chart-display-card" id="chart-ratio">
+                        <h3>Movies vs TV Shows Composition</h3>
+                        <div class="chart-box">
+                            <img src="../output/visualizations/content_distribution.png" alt="Content Distribution">
+                        </div>
+                        <div class="chart-analysis">
+                            <h4>Insight Analysis</h4>
+                            <ul>
+                                <li><strong>Quick Consumption vs Long Retention:</strong> Movies offer quick, single-session viewing which keeps users coming back daily. TV Shows provide higher long-term engagement and platform retention.</li>
+                                <li><strong>Acquisition Cost:</strong> Licensing movies is often cheaper in bulk, leading to a higher movie count, while TV shows require long-term production and planning budgets.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 3: Data Explorer -->
+        <section id="explorer" class="tab-content">
+            <div class="section-title-area">
+                <h2>Interactive Netflix Catalog Explorer</h2>
+                <p>Filter, search, and page through the cleaned dataset containing 8,807 Netflix records.</p>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filter-panel">
+                <div class="search-box-group">
+                    <label for="search-input">Search Catalog</label>
+                    <input type="text" id="search-input" placeholder="Search by title, director, cast...">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-type">Type</label>
+                    <select id="filter-type">
+                        <option value="all">All Types</option>
+                        <option value="Movie">Movies</option>
+                        <option value="TV Show">TV Shows</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-rating">Rating</label>
+                    <select id="filter-rating">
+                        <option value="all">All Ratings</option>
+                        <!-- Dynamic options will be populated in app.js -->
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-country">Country</label>
+                    <select id="filter-country">
+                        <option value="all">All Countries</option>
+                        <!-- Dynamic options will be populated in app.js -->
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="filter-genre">Genre</label>
+                    <select id="filter-genre">
+                        <option value="all">All Genres</option>
+                        <!-- Dynamic options will be populated in app.js -->
+                    </select>
+                </div>
+                
+                <button class="reset-btn" id="btn-reset-filters">Reset</button>
+            </div>
+
+            <!-- Table Info Area -->
+            <div class="table-meta">
+                <div class="results-count">Showing <span id="filtered-count">0</span> of <span id="total-count">0</span> titles</div>
+                <div class="page-size-selector">
+                    <label for="page-size">Show:</label>
+                    <select id="page-size">
+                        <option value="10">10</option>
+                        <option value="25" selected>25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Table Container -->
+            <div class="table-responsive">
+                <table class="data-table" id="netflix-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 8%">Type</th>
+                            <th style="width: 25%">Title</th>
+                            <th style="width: 15%">Director</th>
+                            <th style="width: 15%">Country</th>
+                            <th style="width: 10%">Release Year</th>
+                            <th style="width: 7%">Rating</th>
+                            <th style="width: 8%">Duration</th>
+                            <th style="width: 12%">Genres</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <tr>
+                            <td colspan="8" class="loading-state">Loading dataset...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination Controls -->
+            <div class="pagination-container">
+                <button class="pag-btn" id="prev-page" disabled>&laquo; Previous</button>
+                <div class="page-numbers" id="page-numbers">
+                    <!-- Dynamic buttons -->
+                </div>
+                <button class="pag-btn" id="next-page" disabled>Next &raquo;</button>
+            </div>
+        </section>
+
+        <!-- Tab 4: Key Insights -->
+        <section id="insights" class="tab-content">
+            <div class="insights-layout">
+                <div class="insights-summary-card">
+                    <h2>Executive Summary of Findings</h2>
+                    <p class="summary-lead">The analysis of the Netflix catalog reveals a mature, highly calculated content acquisition and creation strategy. Key indicators point to a shift from licensing library content to aggressively pushing for original, international IPs.</p>
+                </div>
+                
+                <div class="insights-accordion">
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <h3>🎬 Movie Dominance vs TV Show Longevity</h3>
+                            <span class="chevron">▼</span>
+                        </div>
+                        <div class="accordion-body">
+                            <p>While Movies comprise nearly <strong>70% of Netflix's catalog</strong>, TV shows are the core driver of long-term subscriber retention. However, TV shows on Netflix suffer from high attrition, with the vast majority (over 65%) not surviving past Season 1. This reflects Netflix's "churn-and-burn" content strategy: canceling shows that do not immediately build a highly active fan base while continuing to fund new concepts to acquire subscribers.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <h3>🚀 The Post-2015 Content Boom</h3>
+                            <span class="chevron">▼</span>
+                        </div>
+                        <div class="accordion-body">
+                            <p>A massive, exponential surge in content additions is visible starting in 2016. This coincides with Netflix's aggressive international expansion (launching globally in 130 new countries in January 2016). The rapid platform expansion required localized content libraries, leading to high-volume licensing deals and the establishment of Netflix Studio hubs globally.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <h3>🔞 Mature Audiences Take the Lead</h3>
+                            <span class="chevron">▼</span>
+                        </div>
+                        <div class="accordion-body">
+                            <p>Over <strong>40% of the entire Netflix catalog</strong> is rated <strong>TV-MA</strong> (Mature Audience only), and when combined with <strong>TV-14</strong>, they account for roughly <strong>75%</strong> of all content. This indicates that Netflix's core target audience is adults and teenagers. It deliberately leans away from competing directly with Disney+ on children's animation, focusing instead on prestige drama, thrillers, stand-up comedy, and mature anime.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <h3>🌍 True International Expansion</h3>
+                            <span class="chevron">▼</span>
+                        </div>
+                        <div class="accordion-body">
+                            <p>While the United States remains the single largest producing country, the catalog has become increasingly global. Content from India (second largest, especially for movies), the United Kingdom, Japan (anime), and South Korea (K-dramas) represents a huge share. The success of international co-productions and localized Netflix Originals shows the platform is successfully driving subscriber growth outside of North America.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <h3>🎨 Drama and International Genre Hegemony</h3>
+                            <span class="chevron">▼</span>
+                        </div>
+                        <div class="accordion-body">
+                            <p>The top catalog tags are <strong>"Dramas"</strong>, <strong>"Comedy"</strong>, and <strong>"International Movies"</strong>. The high prevalence of "International" tags represents the globalization of content: translating, dubbing, and offering shows across borders. These genres offer the highest cross-cultural conversion, meaning a drama produced in South Korea or Spain (like <em>Squid Game</em> or <em>Money Heist</em>) has a high probability of finding global mass appeal.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal for Detailed Record View -->
+    <div id="details-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-type" id="modal-type">MOVIE</div>
+            <h2 id="modal-title">Title Name</h2>
+            
+            <div class="modal-grid">
+                <div class="modal-main-info">
+                    <p class="modal-desc" id="modal-desc">Description text goes here.</p>
+                    <div class="modal-meta-grid">
+                        <div class="meta-item">
+                            <span class="meta-label">Director</span>
+                            <span class="meta-val" id="modal-director">Director Name</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Cast</span>
+                            <span class="meta-val" id="modal-cast">Actor 1, Actor 2, Actor 3</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-sidebar-info">
+                    <div class="sidebar-pill-group">
+                        <div class="sidebar-item">
+                            <span class="meta-label">Rating</span>
+                            <span class="badge rating-badge" id="modal-rating">TV-MA</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <span class="meta-label">Release Year</span>
+                            <span class="meta-val" id="modal-release">2020</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <span class="meta-label">Duration</span>
+                            <span class="meta-val" id="modal-duration">120 min</span>
+                        </div>
+                        <div class="sidebar-item">
+                            <span class="meta-label">Date Added</span>
+                            <span class="meta-val" id="modal-date">January 1, 2021</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-item" style="margin-top: 15px;">
+                        <span class="meta-label">Genres</span>
+                        <div class="genre-tags" id="modal-genres">
+                            <!-- Tags will be dynamically generated -->
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-item" style="margin-top: 15px;">
+                        <span class="meta-label">Country</span>
+                        <span class="meta-val" id="modal-country">United States</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <p>Netflix Data Analysis Dashboard &copy; 2026. Made with Python, Pandas, Matplotlib, Seaborn, and Custom CSS.</p>
+            <p class="footer-links">Dataset Source: Kaggle (Netflix Movies and TV Shows)</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
